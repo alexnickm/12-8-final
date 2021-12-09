@@ -34,11 +34,17 @@ int main() {
 			break;
 		case 2:
 			cout << "You are in room 2. You can go east." << endl;
+			// Print out 'You can pick up a sword'
 			cin >> input;
 			if (input == "east")
 				room = 3;
-			else if(input == "north")
+			else if (input == "north")
 				room = 1;
+			else if (input == "knife") {
+				inventory[0] = "knife";
+				cout << "you picked up a knife" << endl;
+			}
+			// else if input is sword THEN inventory[0] = "sword";
 			else
 				cout << "sorry not a option." << endl;
 			break;
@@ -119,6 +125,7 @@ int main() {
 		case 10:
 			cout << "you are in room 10. you can go north or east." << endl;
 			cin >> input;
+			// if inventory[1].compare("key") == 0 THEN if input == north
 			if (input == "north")
 				room = 11;
 			else if (input == "east")
@@ -137,7 +144,10 @@ int main() {
 			return 0;
 		}
 
-	} while (input != "q");
+		//if health <= 0, return 0;
+		if (health <= 0) 
+			return 0;
+	} while (input != "q" && health >= 0);
 }
 	
 
@@ -145,16 +155,24 @@ int main() {
 	void shop() {
 	string input;
 	do {
+		cout << "inventory" << endl;
+		for (int i = 0; i < 10; i++)
+			cout << inventory[i] << endl;
+		cout << "money" << money << endl;
 		cout << "Hi! welcome to my shop!" << endl;
 		cout << "press p for potion($20), Enter 'k' for key, press 's' for sword." << endl;
 		cout << "press 'q' to quit" << endl;
 		cin >> input;
+		if (money >= 20)
 		if (input == "p") {//add a money variable so that it checks if you have a sufficient amount of money
 			inventory[0] = "potion ";
 			money -= 20;
+			// Print you got a potion
 		}
 		else if (input == "k") {
 			inventory[1] = "key";
+			money -= 50;
+			// Print you bought a key
 		}
 		//add else if to put lamp into inventory
 		else if (input == "s") {
@@ -176,13 +194,15 @@ int main() {
         else if (num < 50) {
 			cout << "a zombie appears!" << endl;
 			num = rand() % 50 + 1;
-			cout << "a zombie bites you for num damage" << endl;
+			cout << "a zombie bites you for" << num << "damage" << endl;
 			health -= num;
 			battle(60);
 		}
 
-		else if (num < 75)
+		else if (num < 75) {
 			cout << "a spider appears" << endl;
+			battle(30);
+		}
 		else
 			cout << "no monsters" << endl;
 
@@ -195,17 +215,33 @@ int main() {
 			damage = rand() % 20;
 			cout << "the monster hurts you for" << damage << " damage. " << endl;
 			health -= damage;
-			if (inventory[4] == "sword") {
+			if (inventory[0] == "sword") {
 				damage = rand() % 60 + 20;
-				cout << "you use your sword against the enemy" << endl;
+				cout << "you use your sword against the enemy" << damage << "damage" << endl;
+				MonsterHealth -= damage;
 			}
+			if (inventory[0] == "knife") {
+				damage = rand() % 10 + 30;
+				cout << "you stab the enemy" << damage << "damage" << endl;
+				MonsterHealth -= damage;
+			}
+
 			else {
 				damage = rand() % 50 + 10;
 				cout << "you beat the monster" << damage << " damage" << endl;
 				MonsterHealth -= damage;
 			}
 			if (MonsterHealth <= 0)
+			{
 				cout << " you defeated the monster" << endl << endl;
-			else cout << "you died" << endl << endl;
+				money += 50;
+				cout << "You now have " << money << " coins" << endl;
+			}
+				
+			cout << "health: " << health << endl;
+			
+		}
+		if (health <= 0) {
+			cout << "You died";
 		}
 	}
