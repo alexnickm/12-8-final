@@ -1,4 +1,6 @@
 #include<iostream>
+#include<Windows.h>
+#include<string>
 using namespace std;
 
 //function declarations
@@ -34,6 +36,8 @@ int main() {
 			break;
 		case 2:
 			cout << "You are in room 2. You can go east." << endl;
+			cout << "theres a knife in the ground " << endl;
+			cout << " 'knife to pick up" << endl;
 			// Print out 'You can pick up a sword'
 			cin >> input;
 			if (input == "east")
@@ -83,6 +87,9 @@ int main() {
 			break;
 		case 6:
 			cout << "You are in room 6. You can go south." << endl;
+			cout << "inventory" << endl;
+			for (int i = 0; i < 10; i++)
+				cout << inventory[i] << endl;
 			cin >> input;
 			if (input == "south")
 				room = 7;
@@ -140,7 +147,7 @@ int main() {
 			break;
 			
 
-			//MO: add rooms 10 and 11 here
+			
 			return 0;
 		}
 
@@ -160,9 +167,9 @@ int main() {
 			cout << inventory[i] << endl;
 		cout << "money" << money << endl;
 		cout << "Hi! welcome to my shop!" << endl;
-		cout << "press p for potion($20), Enter 'k' for key, press 's' for sword." << endl;
+		cout << "press p for potion($20), Enter 'k' for key($50), enter 'op sword' for op sword, 'h' for helmet, " << endl;
 		cout << "press 'q' to quit" << endl;
-		cin >> input;
+		getline(cin, input);
 		if (money >= 20)
 		if (input == "p") {//add a money variable so that it checks if you have a sufficient amount of money
 			inventory[0] = "potion ";
@@ -175,8 +182,17 @@ int main() {
 			// Print you bought a key
 		}
 		//add else if to put lamp into inventory
-		else if (input == "s") {
-			inventory[2] = "sword";
+		else if (input.compare("op sword") == 0) {
+			if (money >= 150) {
+				inventory[0] = "op sword";
+				money -= 150;
+			}
+		}
+		else if (input == "h") {
+			inventory[2] = "helmet";
+			if (inventory[2].compare("helmet") == 0) {
+				health += 20;
+			}
 		}
 
 	} while (input != "q");
@@ -225,7 +241,11 @@ int main() {
 				cout << "you stab the enemy" << damage << "damage" << endl;
 				MonsterHealth -= damage;
 			}
-
+			if (inventory[0] == "op sword") {
+				damage = rand() % 300 + 10;
+				cout << "you hit with your sword" << damage << "damage" << endl;
+				MonsterHealth -= damage;
+			}
 			else {
 				damage = rand() % 50 + 10;
 				cout << "you beat the monster" << damage << " damage" << endl;
