@@ -1,6 +1,7 @@
 #include<iostream>
 #include<Windows.h>
 #include<string>
+
 using namespace std;
 
 //function declarations
@@ -26,13 +27,16 @@ int main() {
 		//set up a visible inventory here as well as a health/money counter
 		switch (room) {//Add extra else ifs and rooms to give your player an option to move freely all around your map
 		case 1:
+			system("color E1");
 			cout << "You are in a room 1. You can go south." << endl;
 			cout << "press p for shop" << endl;
 			cin >> input;
 			if (input == "south")
 				room = 2;
-			else if (input == "p")
+			else if (input == "p" && money >= 50)
 				shop();
+			else if (input == "p" && money < 50)
+				cout << "your'e broke get more money from killing monsters($50)" << endl;
 			break;
 		case 2:
 			cout << "You are in room 2. You can go east." << endl;
@@ -78,7 +82,7 @@ int main() {
 		case 5:
 			cout << "You are in room 5. You can go south." << endl;
 			monster();
-		//call monster gen in rooms here has to be before cin
+			//call monster gen in rooms here has to be before cin
 			cin >> input;
 			if (input == "south")
 				room = 4;
@@ -95,7 +99,7 @@ int main() {
 				room = 7;
 			else if (input == "north")
 				room = 4;
-			else 
+			else
 				cout << "sorry not a option." << endl;
 			break;
 		case 7:
@@ -132,9 +136,12 @@ int main() {
 		case 10:
 			cout << "you are in room 10. you can go north or east." << endl;
 			cin >> input;
-			// if inventory[1].compare("key") == 0 THEN if input == north
-			if (input == "north")
-				room = 11;
+			if (input == "north") {
+				if (inventory[1].compare("key") != 0)
+					cout << " the door is locked you need a key" << endl;// if inventory[1].compare("key") == 0 THEN if input == north
+				else 
+						room = 11;
+			}
 			else if (input == "east")
 				room = 9;
 
@@ -167,32 +174,49 @@ int main() {
 			cout << inventory[i] << endl;
 		cout << "money" << money << endl;
 		cout << "Hi! welcome to my shop!" << endl;
-		cout << "press p for potion($20), Enter 'k' for key($50), enter 'op sword' for op sword, 'h' for helmet, " << endl;
+		cout << "press p for potion($20), Enter 'k' for key($50), enter 'op sword' for op sword(150), 'h' for helmet(20), " << endl; // add more items and fix some items
 		cout << "press 'q' to quit" << endl;
 		getline(cin, input);
-		if (money >= 20)
-		if (input == "p") {//add a money variable so that it checks if you have a sufficient amount of money
-			inventory[0] = "potion ";
-			money -= 20;
-			// Print you got a potion
+		if (input == "p") {
+			if (money >= 20) {//add a money variable so that it checks if you have a sufficient amount of money
+				inventory[0] = "potion ";
+				money -= 20;
+				cout << "you got a potion" << endl;
+				// Print you got a potion
+			}
+			else
+				cout << " You cannot buy this you're broke." << endl;
 		}
 		else if (input == "k") {
-			inventory[1] = "key";
-			money -= 50;
-			// Print you bought a key
+			if (money >= 50) {
+				inventory[1] = "key";
+				money -= 50;
+				cout << "you got a key to open a door" << endl;
+			}
+			else
+				cout << "you are broke get ur money up not ur funny up" << endl;// Print you bought a key
 		}
 		//add else if to put lamp into inventory
 		else if (input.compare("op sword") == 0) {
 			if (money >= 150) {
 				inventory[0] = "op sword";
 				money -= 150;
+				cout << "you got a op sword" << endl;
 			}
+			else
+				cout << "You need more money" << endl;
 		}
 		else if (input == "h") {
-			inventory[2] = "helmet";
-			if (inventory[2].compare("helmet") == 0) {
-				health += 20;
+			if (money >= 20) {
+				inventory[2] = "helmet";
+				money -= 20;
+				if (inventory[2].compare("helmet") == 0)
+					health += 20;
+			
+				cout << "you got a helmet" << endl;
 			}
+			else
+				cout << "you too poor u need some money" << endl;
 		}
 
 	} while (input != "q");
@@ -263,5 +287,6 @@ int main() {
 		}
 		if (health <= 0) {
 			cout << "You died";
+			system("COLOR 40");
 		}
 	}
